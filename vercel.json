@@ -1,0 +1,10 @@
+{
+    "version": 1,
+    "name": "email reminder api",
+    "builds": [
+       { "src": "script.js", "use": "@vercel/node" }
+    ],
+    "routes": [
+       { "src": "/(.*)", "dest": "/script.js" }
+    ]
+ }
