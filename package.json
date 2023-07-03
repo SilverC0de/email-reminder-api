@@ -6,6 +6,7 @@
     "express-validator": "^7.0.1",
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
     "redis": "^4.6.7"
   },
   "name": "email-reminder-api",
@@ -13,13 +14,31 @@
   "version": "1.0.0",
   "main": "script.js",
   "devDependencies": {
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.22"
+    "eslint": "^8.44.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.8"
   },
   "scripts": {
     "start": "node script.js",
     "test": "",
-    "dev": "nodemon script.js"
+    "dev": "nodemon script.js",
+    "lint": "eslint --ignore-path .gitignore .",
+    "prettier": "prettier --ignore-path .gitignore  \"**/*.+(js|json)\"",
+    "format": "npm run prettier -- --write",
+    "check-format": "npm run prettier -- --list-different",
+    "validate": "npm run lint && npm run check-format",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*": [
+      "eslint",
+      "prettier --write --ignore-unknown"
+    ]
   },
   "author": "silverC0de x jakusha",
   "license": "ISC"
