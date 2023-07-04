@@ -8,5 +8,16 @@
   "parserOptions": {
     "ecmaVersion": "latest"
   },
-  "rules": {}
+  "rules": {
+    "consistent-return" : "off",
+    "semi": "error",
+    "no-undef" :"error",
+    "no-console": "error",
+    "no-useless-concat" : "error",
+    "no-useless-return" : "error",
+    "no-duplicate-imports" : "error",
+    "no-whitespace-before-property" : "error",
+    "no-multiple-empty-lines" : ["error", { "max": 2, "maxEOF": 0}],
+    "max-lines": ["error", { "max": 1000}]
+  }
 }

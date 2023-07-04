@@ -22,3 +22,8 @@ app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`app listening at PORT ${PORT}`);
 });
+
+// file-tXpZJLfYNkeNLHlgTNM4s0Lz
+// ft-miM75Xa4lgvPfm2OuDrjnaD1
+// openai api fine_tunes.get -i ft-miM75Xa4lgvPfm2OuDrjnaD1
+//  export OPENAI_API_KEY="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"
