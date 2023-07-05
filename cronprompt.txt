@@ -1,0 +1,103 @@
+English: each day
+GPT: 0 0 * * *
+English: every day
+GPT: 0 0 * * *
+English: daily
+GPT: 0 0 * * *
+English: every day at 3 AM
+GPT: 0 3 * * *
+English: 5am
+GPT: 0 5 * * *
+English: daily at 5am
+GPT: 0 5 * * *
+English: every friday at 5am
+GPT: 0 5 * * 5
+English: daily at 17:30
+GPT: 30 17 * * *
+English: every week
+GPT: 0 0 * * 0
+English: weekly
+GPT: 0 0 * * 0
+English: every minute
+GPT: * * * * *
+English: every 5 minutes
+GPT: */5 * * * *
+English: every 30 minutes
+GPT: */30 * * * *
+English: every month
+GPT: 0 0 1 * *
+English: monthly
+GPT: 0 0 1 * *
+English: every Monday
+GPT: 0 0 * * 1
+English: every Wednesday
+GPT: 0 0 * * 3
+English: every Friday
+GPT: 0 0 * * 5
+English: every hour
+GPT: 0 * * * *
+English: every 6 hours
+GPT: 0 */6 * * *
+English: hourly
+GPT: 0 * * * *
+English: every year
+GPT: 0 0 1 1 *
+English: yearly
+GPT: 0 0 1 1 *
+English: annually
+GPT: 0 0 1 1 *
+English: every day at 9am
+GPT: 0 9 * * *
+English: every day at 5pm
+GPT: 0 17 * * *
+English: every day at 5:45pm
+GPT: 45 17 * * *
+English: every day at 17:00
+GPT: 0 17 * * *
+English: every day at 17:25
+GPT: 25 17 * * *
+English: 5:15am every Tuesday
+GPT: 15 5 * * 2
+English: 7pm every Thursday
+GPT: 0 19 * * 4
+English: every May
+GPT: 0 0 1 5 *
+English: every December
+GPT: 0 0 1 12 *
+English: midnight
+GPT: 0 0 * * *
+English: midnight on tuesdays
+GPT: 0 0 * * 2
+English: every 5 minutes on Tuesdays
+GPT: */5 * * * 2
+English: noon
+GPT: 0 12 * * *
+English: every 25th
+GPT: 0 0 25 * *
+English: every 3rd of January
+GPT: 0 0 3 1 *
+English: every day at 9AM from 24 to 28
+GPT: 0 9 24-28 * *
+English: At 09:00 AM, between day 24 and 28 of the month, only in May
+GPT: 0 9 24-28 5 *
+English: 5:30 PM between 12 and 28 of this month
+GPT: 30 17 12-28 * *
+English: Everyday between 19 to 23 at 9 AM only in June
+GPT: 0 9 19-23 6 *
+English: at 17:30 on the 30th of May
+GPT: 30 17 30 5 *
+English: on Sunday at 9:30 PM
+GPT: 0 21 * * 0
+English: on every Sunday at 9:30 PM
+GPT: 0 21 * * 0
+English: tomorrow by 7pm
+GPT: 0 19 * * THU
+English: tomorrow by 12noon
+GPT: 0 12 * * THU
+English: August 12, 2023
+GPT: 0 0 12 8 *
+English: today by 6am
+GPT: 0 6 * * WED
+English: Tomorrow by 8am
+GPT: 0 8 * * THU
+English: 

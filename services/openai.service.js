@@ -1,4 +1,7 @@
 const { Configuration, OpenAIApi } = require('openai');
+const fs = require('fs');
+const path = require('path');
+
 const { OPENAI } = require('../config');
 
 const configuration = new Configuration({
@@ -12,9 +15,9 @@ exports.generateEmailTitle = async (prompt) => {
     const completion = await openai.createCompletion({
         model: 'text-davinci-003',
         prompt,
-        temperature: 0.1,
-        presence_penalty: 0.2,
-        max_tokens: 80
+        temperature: 0.4,
+        presence_penalty: 0.4,
+        max_tokens: 100
     });
 
     return String(completion.data.choices[0].text).replace(/(\r\n|\n|\r)/gm, '').replace(/['"]+/g, '');
@@ -32,13 +35,17 @@ exports.generateEmailContent = async (name, prompt) => {
 
 
 exports.generateCron = async (prompt) => {
+    let cronprompt = fs.readFileSync(path.resolve(__dirname, '../cronprompt.txt'));
+    cronprompt += prompt;
+   
+    
     const completion = await openai.createCompletion({
         model: 'text-davinci-003',
-        prompt,
+        prompt: cronprompt,
         temperature: 0,
         presence_penalty: 0,
         max_tokens: 40
     });
 
-    return String(completion.data.choices[0].text).replace(/(\r\n|\n|\r)/gm, '').replace(/['"]+/g, '');
+    return String(completion.data.choices[0].text).replace('GPT: ', '').replace(/(\r\n|\n|\r)/gm, '');
 };
