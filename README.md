@@ -21,11 +21,3 @@ This repository can be installed on your local machine. Please make sure you hav
 4. ``npm i``
 5. ``npm start``
 6. API Documentation can be found on Treblle
-
-#### Contributors
-
-<a href='https://github.com/SilverC0de/email-reminder-api/graphs/contributors'>
-  <p align='left'>
-    <img  src='https://contrib.rocks/image?repo=SilverC0de/email-reminder-api' alt='Project contributors' />
-  </p>
-</a>

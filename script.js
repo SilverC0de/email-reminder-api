@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 app.all('*', (req, res) => {
   res.status(405).json({
     status: false,
-    message: 'Invalid route'
+    message: 'Invalid API route'
   });
 });
 

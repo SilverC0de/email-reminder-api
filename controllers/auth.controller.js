@@ -1,7 +1,7 @@
 const { v4 : uuidv4 } = require('uuid');
 const userService = require('../services/users.service');
-const bcryptHelper = require('../helpers/bcrypt.helper');
-const jwtHelper = require('../helpers/jwt.helper');
+const bcryptService = require('../services/bcrypt.service');
+const jwtService = require('../services/jwt.service');
 
 
 exports.registerUser = async (req, res) => {
@@ -10,7 +10,7 @@ exports.registerUser = async (req, res) => {
        
     try {
         const checkUser = await userService.fetchUser(email);
-        if(checkUser.rowCount > 0){
+        if(checkUser.rowCount > 0) {
             // user already exist
             return res.status(406).json({
                 status: false,
@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
         
         
         // hash password
-        const hashedPassword = await bcryptHelper.encryptPassword(password);
+        const hashedPassword = await bcryptService.encryptPassword(password);
 
 
         // register user then fetch user details
@@ -28,7 +28,7 @@ exports.registerUser = async (req, res) => {
 
         
         // generate JWT token
-        const jwtToken = await jwtHelper.generateToken(email, uuid);
+        const jwtToken = await jwtService.generateToken(email, name, uuid);
         
         return res.status(200).json({
             status: true,
@@ -59,7 +59,7 @@ exports.signInUser = async (req, res) => {
         const fetchedUser = await userService.fetchUser(email);
 
 
-        if(fetchedUser.rowCount === 0){
+        if(fetchedUser.rowCount === 0) {
             // showing little infomation for security reasons
             return res.status(401).json({
                 status: false,
@@ -73,8 +73,8 @@ exports.signInUser = async (req, res) => {
 
 
         // check password
-        const passwordMatch = await bcryptHelper.comperePassword(password, hashedPassword);
-        if(!passwordMatch){
+        const passwordMatch = await bcryptService.comperePassword(password, hashedPassword);
+        if(!passwordMatch) {
             return res.status(401).json({
                 status: false,
                 message: 'Incorrect email/password combination'
@@ -83,7 +83,7 @@ exports.signInUser = async (req, res) => {
 
 
         // generate JWT token
-        const jwtToken = await jwtHelper.generateToken(email, userUUID);
+        const jwtToken = await jwtService.generateToken(email, userName, userUUID);
         
 
         return res.status(200).json({
