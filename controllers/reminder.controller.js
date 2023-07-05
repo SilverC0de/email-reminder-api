@@ -1,4 +1,5 @@
 const { v4 : uuidv4 } = require('uuid');
+const path = require('path');
 const openAIService = require('../services/openai.service');
 const reminderService = require('../services/reminder.service');
 const { PORT } = require('../config');
@@ -70,7 +71,7 @@ exports.previewHTML = async (req, res) => {
         const { email_title: title, email_info: body } = reminder.rows[0];
 
         // render HTML
-        res.render('email', { title, body });
+        res.render(path.join(__dirname, '../views/email'), { title, body });
     } catch (e) {
         return res.status(500).json({
             status: false,
