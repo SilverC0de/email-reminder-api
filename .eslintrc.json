@@ -8,5 +8,23 @@
   "parserOptions": {
     "ecmaVersion": "latest"
   },
-  "rules": {}
+  "rules": {
+    "consistent-return" : "off",
+    "semi": "error",
+    "space-before-blocks" : "error",
+    "space-in-parens" : "error",
+    "space-infix-ops" : "error",
+    "space-unary-ops" : "error",
+    "no-undef" :"error",
+    "no-console": "error",
+    "no-useless-concat" : "error",
+    "no-useless-return" : "error",
+    "no-unused-vars" : "error",
+    "no-duplicate-imports" : "error",
+    "no-whitespace-before-property" : "error",
+    "no-multiple-empty-lines" : ["error", { "max": 2, "maxEOF": 0}],
+    "import/newline-after-import": ["off"],
+    "max-lines": ["error", { "max": 1000}],
+    "quotes": [2, "single", { "avoidEscape": true }]
+  }
 }
