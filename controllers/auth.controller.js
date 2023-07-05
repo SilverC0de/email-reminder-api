@@ -88,7 +88,7 @@ exports.signInUser = async (req, res) => {
 
         return res.status(200).json({
             status: true,
-            message: 'User registered successfully',
+            message: 'User signed in successfully',
             data: {
                 uuid: userUUID,
                 email: userEmail,
