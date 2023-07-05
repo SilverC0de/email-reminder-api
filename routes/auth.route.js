@@ -1,15 +1,26 @@
 const express = require('express');
-
-const router = express.Router();
+const api = express.Router();
 const { check } = require('express-validator');
 
-// const sanitizer = require('../middlewares/sanitizer.middleware.js')
+const validatorMiddleware = require('../middlewares/validator');
+const authController = require('../controllers/auth.controller');
 
-// const auth = require('../controllers/auth.controller.js')
 
+api.route('/register').post([
+    check('name').notEmpty().isLength({ min: 2 }).escape().withMessage('Enter a valid name'),
+    check('email').isEmail().trim().withMessage('Enter valid email address'),
+    check('password').isLength({ min: 6 }).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
+    .withMessage(
+      'Please enter a password at least 6 character and contains at least one uppercase, lowercase and a special character',
+    )
+], validatorMiddleware, authController.registerUser);
 
-router.route('/register').post([
-    check('email').notEmpty().escape().trim().withMessage('Verification token is required')
-]);
+api.route('/login').post([
+    check('email').isEmail().trim().withMessage('Enter valid email address'),
+    check('password').isLength({ min: 6 }).matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/)
+    .withMessage(
+      'Please enter a password at least 6 character and contains at least one uppercase, lowercase and a special character',
+    )
+], validatorMiddleware, authController.signInUser);
 
-module.exports = router;
+module.exports = api;

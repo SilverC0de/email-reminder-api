@@ -1,12 +1,12 @@
 const { validationResult } = require('express-validator');
 
 module.exports = (req, res, next) => {
-    const errors = validationResult(req);
+    const e = validationResult(req);
 
-    if(!errors.isEmpty){
+    if(e.errors.length > 0){
         return res.status(422).json({
             status: false,
-            message: errors.errors[errors.errors.length - 1].msg
+            message: e.errors[e.errors.length - 1].msg
         });
     }
 

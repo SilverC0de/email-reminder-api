@@ -1,5 +1,5 @@
 const authRoute = require('./auth.route');
 
-module.exports = (api) => {
-    api.use('/auth', authRoute);
+module.exports = (api, version) => {
+    api.use(`/${version}/auth`, authRoute);
 };
