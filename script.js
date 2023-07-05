@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const path = require('path');
 const { useTreblle } = require('treblle');
 const { PORT, TREBLLE_API_KEY, TREBLLE_PROJECT_ID } = require('./config');
 
@@ -12,6 +13,7 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '1mb' }));
+app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 
 
