@@ -25,6 +25,21 @@ api.route('/preview').post([
 
 api.route('/preview/:uuid').get([
   check('uuid').matches(/[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}/).withMessage('Reminder UUID is required').trim()
-], validatorMiddleware, reminderController.previewHTML);
+], validatorMiddleware, jwtMiddleware, reminderController.fetchReminder);
+
+
+api.route('/start').post([
+  check('reminder_uuid').matches(/[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}/).withMessage('Reminder UUID is required').trim()
+], validatorMiddleware, jwtMiddleware, reminderController.startReminder);
+
+
+api.route('/stop').post([
+  check('reminder_uuid').matches(/[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}/).withMessage('Reminder UUID is required').trim()
+], validatorMiddleware, jwtMiddleware, reminderController.stopReminder);
+
+
+api.route('/interface/:uuid').get([
+  check('uuid').matches(/[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}/).withMessage('Reminder UUID is required').trim()
+], validatorMiddleware, reminderController.previewReminderHTML);
 
 module.exports = api;

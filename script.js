@@ -2,20 +2,40 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const path = require('path');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const { useTreblle } = require('treblle');
 const { PORT, TREBLLE_API_KEY, TREBLLE_PROJECT_ID } = require('./config');
 
 const app = express();
 const version = 'v1';
 
-app.use(express.json());
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000,
+	max: 100,
+	standardHeaders: true,
+	legacyHeaders: true,
+});
+
 app.use(morgan('dev'));
-app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '1mb' }));
+app.use(limiter);
+app.use(cors());
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
+app.use(helmet({
+    'crossOriginEmbedderPolicy': true,
+    'X-Frame-Options': 'DENY',
+    'xPoweredBy': false
+}));
 
+app.use((req, res, next) => {
+  res.setHeader('Accept', 'application/json');
+  res.setHeader('Allow', 'application/json');
+  res.setHeader('Content-Type', 'application/json');
+  next();
+});
 
 useTreblle(app, {
   apiKey: TREBLLE_API_KEY,
