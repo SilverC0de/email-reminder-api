@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
 app.all('*', (req, res) => {
   res.status(405).json({
     status: false,
-    message: 'Invalid API route'
+    message: 'API route not allowed or supported'
   });
 });
 

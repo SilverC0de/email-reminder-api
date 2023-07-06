@@ -28,6 +28,21 @@ exports.fetchReminderByUser = async (uuid, userUUID) => {
   return result;
 };
 
+exports.countReminderByUser = async (userUUID) => {
+  const result = await db.query('SELECT COUNT(uuid) FROM reminders WHERE created_by = $1', [
+    userUUID
+  ]);
+
+  return result;
+};
+
+exports.fetchReminderListByUser = async (userUUID, limit, offset) => {
+  const result = await db.query('SELECT uuid, email_title, schedule, status, preview, created_at FROM reminders WHERE created_by = $1 ORDER BY id DESC LIMIT $2 OFFSET $3', [
+    userUUID, limit, offset
+  ]);
+
+  return result;
+};
 
 exports.updateReminderStatus = async (uuid, status) => {
   const result = await db.query('UPDATE reminders SET status = $1 WHERE uuid = $2', [
