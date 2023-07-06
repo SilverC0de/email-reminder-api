@@ -124,13 +124,17 @@ exports.startReminder = async (req, res) => {
 
 
         // create cron job for email delivery
-        const {cron, email_title : emailTitle, email_body: emailBody } = reminder.rows[0];
+        const {cron, email_title : emailTitle, email_info: emailBody, action, schedule } = reminder.rows[0];
         await cronService.setupCronJob(cron, 'silverg33k@gmail.com', emailTitle, emailBody);
 
 
         return res.status(200).json({
             status: true,
-            message: 'Email reminder is now running!'
+            message: 'Email reminder is now running!',
+            data: {
+                action_prompt: action,
+                schedule_prompt: schedule
+            }
         });
     } catch (e) {
         return res.status(500).json({
@@ -156,11 +160,16 @@ exports.stopReminder = async (req, res) => {
         }
 
 
+        const {action, schedule } = reminder.rows[0];
         await reminderService.updateReminderStatus(uuid, 'stopped');
 
         return res.status(200).json({
             status: true,
-            message: 'Email reminder stopped!'
+            message: 'Email reminder stopped!',
+            data: {
+                action_prompt: action,
+                schedule_prompt: schedule
+            }
         });
     } catch (e) {
         return res.status(500).json({

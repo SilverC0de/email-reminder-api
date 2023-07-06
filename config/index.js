@@ -6,5 +6,6 @@ module.exports = {
     TREBLLE_API_KEY: process.env.TREBLLE_API_KEY,
     TREBLLE_PROJECT_ID: process.env.TREBLLE_PROJECT_ID,
     OPENAI: process.env.OPENAI,
+    POSTMARK: process.env.POSTMARK,
     POSTGRES: process.env.POSTGRES
 };

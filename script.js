@@ -47,6 +47,7 @@ require('./routes')(app, version);
 
 // default route
 app.get('/', (req, res) => {
+  // send html view for base url only (for email account approval)
   res.render('index', (error, html) => {
     res.setHeader('Content-Type', 'text/html');
     res.status(200).send(html);

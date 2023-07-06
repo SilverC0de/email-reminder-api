@@ -1,11 +1,20 @@
 const cronjob = require('node-cron');
+const postmark = require('postmark');
+const { POSTMARK } = require('../config');
+
+const client = new postmark.ServerClient(POSTMARK);
 
 exports.setupCronJob = async (cron, recipient, title, body) => {
     cronjob.schedule(cron, async () => {
 
-        // send email lol
-        // check is mail status is active
-        // eslint-disable-next-line no-console
-        console.log(`running a task every minute${ recipient } ${ title } ${ body }`);
+        client.sendEmailWithTemplate({
+            From: 'dev@reblle.live',
+            To: 'dev@reblle.live',
+            TemplateAlias: 'friendly-reminder',
+            TemplateModel: {
+              title,
+              body
+            }
+          });
     });
 };
