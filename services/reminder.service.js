@@ -1,12 +1,10 @@
 const db = require('../config/database');
 
 
-exports.createReminder = async (uuid, userUUID, email, cron, recipients, emailTitle, emailInfo, schedule, action, previewUrl, status) => {
-  const emailArray = { email: recipients };
-
+exports.createReminder = async (uuid, userUUID, email, cron, recipient, emailTitle, emailInfo, schedule, action, previewUrl, status) => {
   const result = await db.query(
     'INSERT INTO reminders (uuid, created_by, creator_email, cron, email_recipient, email_title, email_info, schedule, action, preview, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
-    [uuid, userUUID, email, cron, emailArray, emailTitle, emailInfo, schedule, action, previewUrl, status]
+    [uuid, userUUID, email, cron, recipient, emailTitle, emailInfo, schedule, action, previewUrl, status]
   );
 
   return result;
@@ -28,6 +26,14 @@ exports.fetchReminderByUser = async (uuid, userUUID) => {
   return result;
 };
 
+exports.fetchReminderByMessageID = async (messageID) => {
+  const result = await db.query('SELECT * FROM reminders WHERE email_id = $1 LIMIT 1', [
+    messageID
+  ]);
+
+  return result;
+};
+
 exports.countReminderByUser = async (userUUID) => {
   const result = await db.query('SELECT COUNT(uuid) FROM reminders WHERE created_by = $1', [
     userUUID
@@ -44,17 +50,25 @@ exports.fetchReminderListByUser = async (userUUID, limit, offset) => {
   return result;
 };
 
-exports.checkReminderStatus = async (uuid) => {
-  const result = await db.query('SELECT status FROM reminders WHERE uuid = $1', [
-    uuid
+exports.updateReminderStatus = async (uuid, status) => {
+  const result = await db.query('UPDATE reminders SET status = $1 WHERE uuid = $2', [
+    status, uuid
   ]);
 
   return result;
 };
 
-exports.updateReminderStatus = async (uuid, status) => {
-  const result = await db.query('UPDATE reminders SET status = $1 WHERE uuid = $2', [
-    status, uuid
+exports.updateReminderReadStatus = async (messageID) => {
+  const result = await db.query('UPDATE reminders SET email_opened = true WHERE email_id = $1', [
+    messageID
+  ]);
+
+  return result;
+};
+
+exports.updateReminderMessageID = async (uuid, messageID) => {
+  const result = await db.query('UPDATE reminders SET email_id = $1 WHERE uuid = $2', [
+    messageID, uuid
   ]);
 
   return result;
