@@ -3,32 +3,26 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const path = require('path');
 const cors = require('cors');
-const rateLimit = require('express-rate-limit');
 const { useTreblle } = require('treblle');
+const { limiter } = require('./middlewares/ratelimit.middleware');
 const { PORT, TREBLLE_API_KEY, TREBLLE_PROJECT_ID } = require('./config');
 
 const app = express();
 const version = 'api/v1';
 
-const limiter = rateLimit({
-	windowMs: 10 * 60 * 1000,
-	max: 100,
-	standardHeaders: true,
-	legacyHeaders: true,
-});
 
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '1mb' }));
-app.use(limiter);
 app.use(cors());
-app.set('views', path.join(__dirname, '/views'));
-app.set('view engine', 'ejs');
 app.use(helmet({
     'crossOriginEmbedderPolicy': true,
     'xPoweredBy': false,
     'xFrameOptions': { action: 'deny' }
 }));
+app.use(limiter);
+app.set('views', path.join(__dirname, '/ejs'));
+app.set('view engine', 'ejs');
 
 
 app.use((req, res, next) => {
@@ -40,6 +34,7 @@ app.use((req, res, next) => {
 useTreblle(app, {
   apiKey: TREBLLE_API_KEY,
   projectId: TREBLLE_PROJECT_ID,
+  additionalFieldsToMask: ['token', 'password', 'messageID'],
 });
 
 // require all routes
@@ -56,7 +51,7 @@ app.get('/', (req, res) => {
 
 // block other routes
 app.all('*', (req, res) => {
-  res.status(405).json({
+  res.status(200).json({
     status: false,
     message: 'API route not allowed or supported'
   });
