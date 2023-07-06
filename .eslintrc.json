@@ -9,6 +9,7 @@
     "ecmaVersion": "latest"
   },
   "rules": {
+    "dot-notation": 0,
     "consistent-return" : "off",
     "semi": "error",
     "space-before-blocks" : "error",
