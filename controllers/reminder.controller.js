@@ -10,7 +10,7 @@ exports.generateReminder = async (req, res) => {
     // eslint-disable-next-line no-unused-vars
     const { uuid: userUUID, name, email } = req;
     const { protocol, hostname }  = req;
-    const { action_prompt : actionPrompt, schedule_prompt : schedulePrompt, recipients } = req.body;
+    const { action_prompt : actionPrompt, schedule_prompt : schedulePrompt, recipient } = req.body;
     const uuid = uuidv4();
     const previewURL = `${protocol}://${(hostname === 'localhost' ? `localhost:${PORT}` : hostname)}/api/v1/reminder/interface/${uuid}`;
 
@@ -24,7 +24,7 @@ exports.generateReminder = async (req, res) => {
 
         // create reminder
         // (uuid, userUUID, email, cron, recipients, emailTitle, emailInfo, schedule, action, status)
-        await reminderService.createReminder(uuid, userUUID, email, cron, recipients, title, body, schedulePrompt, actionPrompt, previewURL, 'preview');
+        await reminderService.createReminder(uuid, userUUID, email, cron, recipient, title, body, schedulePrompt, actionPrompt, previewURL, 'preview');
 
 
         return res.status(201).json({
@@ -38,9 +38,9 @@ exports.generateReminder = async (req, res) => {
                 cron,
                 preview: previewURL,
                 reminder_uuid: uuid,
-                open_count: 0,
+                email_opened: 0,
                 status: 'preview',
-                recipients
+                email_recipient: recipient
             }
         });
     } catch (e) {
@@ -73,10 +73,10 @@ exports.fetchReminder = async (req, res) => {
             preview,
             status,
             created_at: time,
-            open_count: counter,
+            email_opened: opened,
             email_title: title,
             email_info: body,
-            email_recipient: recipients,
+            email_recipient: recipient,
          } = reminder.rows[0];
 
         return res.status(200).json({
@@ -91,9 +91,9 @@ exports.fetchReminder = async (req, res) => {
                 preview,
                 reminder_uuid: uuid,
                 status,
-                open_count: counter,
+                email_opened: opened,
                 time: format(time, 'MMMM d yyyy - h:mma'),
-                recipients: recipients.email
+                email_recipient: recipient
             }
         });
     } catch (e) {
@@ -124,13 +124,17 @@ exports.startReminder = async (req, res) => {
 
 
         // create cron job for email delivery
-        const {cron, email_title : emailTitle, email_body: emailBody } = reminder.rows[0];
-        await cronService.setupCronJob(cron, 'silverg33k@gmail.com', emailTitle, emailBody);
+        const {cron, email_title : title, email_info: body, email_recipient: recipient, action, schedule } = reminder.rows[0];
+        await cronService.setupCronJob(cron, uuid, recipient, title, body);
 
 
         return res.status(200).json({
             status: true,
-            message: 'Email reminder is now running!'
+            message: 'Email reminder is now running!',
+            data: {
+                action_prompt: action,
+                schedule_prompt: schedule
+            }
         });
     } catch (e) {
         return res.status(500).json({
@@ -156,11 +160,16 @@ exports.stopReminder = async (req, res) => {
         }
 
 
+        const {action, schedule } = reminder.rows[0];
         await reminderService.updateReminderStatus(uuid, 'stopped');
 
         return res.status(200).json({
             status: true,
-            message: 'Email reminder stopped!'
+            message: 'Email reminder stopped!',
+            data: {
+                action_prompt: action,
+                schedule_prompt: schedule
+            }
         });
     } catch (e) {
         return res.status(500).json({
@@ -251,6 +260,37 @@ exports.previewReminderHTML = async (req, res) => {
         return res.status(500).json({
             status: false,
             message: 'Unable to preview email reminder'
+        });
+    }
+};
+
+
+exports.webhookUpdateReadStatus = async (req, res) => {
+    const { MessageID } = req.body;
+    try {
+        // check if reminder exists by messageID
+        const reminder = await reminderService.fetchReminderByMessageID(MessageID);
+
+        if(reminder.rowCount === 0) {
+            return res.status(406).json({
+                status: false,
+                message: 'MessageID not assigned to any email reminder'
+            });
+        }
+
+        // update email read status
+        await reminderService.updateReminderReadStatus(MessageID);
+
+
+        return res.status(200).json({
+            status: true,
+            message: 'Read status updated successfully'
+        });
+    }
+    catch (e) {
+        return res.status(500).json({
+            status: false,
+            message: 'Webhook service update failed'
         });
     }
 };
