@@ -7,7 +7,7 @@ const jwtMiddleware = require('../middlewares/jwt.middleware');
 const reminderController = require('../controllers/reminder.controller');
 
 
-api.route('/preview').post([
+api.route('/generate').post([
     check('action_prompt')
       .notEmpty().withMessage('Action prompt is required e.g Tell Emeka to buy gala')
       .isLength({ max: 50 }).withMessage('Action prompt too long')
@@ -20,10 +20,10 @@ api.route('/preview').post([
       .isArray({ min: 1, max: 4 }).withMessage('Email recipients cannot be more than 4'),
     check('recipients.*')
       .isEmail().withMessage('At least one of the recipient email is invalid'),
-], validatorMiddleware, jwtMiddleware, reminderController.previewReminder);
+], validatorMiddleware, jwtMiddleware, reminderController.generateReminder);
 
 
-api.route('/preview/:uuid').get([
+api.route('/info/:uuid').get([
   check('uuid').matches(/[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}/).withMessage('Reminder UUID is required').trim()
 ], validatorMiddleware, jwtMiddleware, reminderController.fetchReminder);
 

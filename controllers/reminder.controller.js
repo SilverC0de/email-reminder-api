@@ -5,13 +5,13 @@ const cronService = require('../services/cron.service');
 const { PORT } = require('../config');
 
 
-exports.previewReminder = async (req, res) => {
+exports.generateReminder = async (req, res) => {
     // eslint-disable-next-line no-unused-vars
     const { uuid: userUUID, name, email } = req;
     const { protocol, hostname }  = req;
     const { action_prompt : actionPrompt, schedule_prompt : schedulePrompt, recipients } = req.body;
     const uuid = uuidv4();
-    const previewURL = `${protocol}://${(hostname === 'localhost' ? `localhost:${PORT}` : hostname)}/v1/reminder/interface/${uuid}`;
+    const previewURL = `${protocol}://${(hostname === 'localhost' ? `localhost:${PORT}` : hostname)}/api/v1/reminder/interface/${uuid}`;
 
     try {
         const title = await openAIService.generateEmailTitle(`Generate an email title less than 50 characters from the following: ${actionPrompt}`);
