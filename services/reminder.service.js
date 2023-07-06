@@ -44,6 +44,14 @@ exports.fetchReminderListByUser = async (userUUID, limit, offset) => {
   return result;
 };
 
+exports.checkReminderStatus = async (uuid) => {
+  const result = await db.query('SELECT status FROM reminders WHERE uuid = $1', [
+    uuid
+  ]);
+
+  return result;
+};
+
 exports.updateReminderStatus = async (uuid, status) => {
   const result = await db.query('UPDATE reminders SET status = $1 WHERE uuid = $2', [
     status, uuid
