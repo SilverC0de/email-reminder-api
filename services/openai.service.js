@@ -20,7 +20,7 @@ exports.generateEmailTitle = async (prompt) => {
         max_tokens: 100
     });
 
-    return String(completion.data.choices[0].text).replace(/(\r\n|\n|\r)/gm, '').replace(/['"]+/g, '');
+    return String(completion.data.choices[0].text).replace(/(\r\n|\n|\r)/gm, '').replace(/['"]+/g, '').replace(/\[.*?\]/g, '');
 };
 
 
@@ -30,15 +30,15 @@ exports.generateEmailContent = async (name, prompt) => {
         messages: [{role: 'user', content: prompt}]
     });
 
-    return String(completion.data.choices[0].message.content).replace('[Your Name]', name).replace('[Recipient]', '').replace('[Name]', '');
+    return String(completion.data.choices[0].message.content).replace('[Your Name]', name).replace(/\[.*?\]/g, '');
 };
 
 
 exports.generateCron = async (prompt) => {
     let cronprompt = fs.readFileSync(path.resolve(__dirname, '../cronprompt.txt'));
     cronprompt += prompt;
-   
-    
+    cronprompt += '\nGPT:';
+       
     const completion = await openai.createCompletion({
         model: 'text-davinci-003',
         prompt: cronprompt,
@@ -47,5 +47,6 @@ exports.generateCron = async (prompt) => {
         max_tokens: 40
     });
 
-    return String(completion.data.choices[0].text).replace('GPT: ', '').replace(/(\r\n|\n|\r)/gm, '');
+
+    return String(completion.data.choices[0].text).replace(/(\r\n|\n|\r)/gm, '').trim();
 };
