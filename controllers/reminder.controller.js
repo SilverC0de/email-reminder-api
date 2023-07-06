@@ -29,7 +29,7 @@ exports.generateReminder = async (req, res) => {
 
         return res.status(201).json({
             status: true,
-            message: 'Email reminder generated, please activate/start reminder for it to start running',
+            message: 'Email reminder generated, please start reminder for it to start sending emails',
             data: {
                 email_title: title,
                 email_body: body,
@@ -38,7 +38,7 @@ exports.generateReminder = async (req, res) => {
                 cron,
                 preview: previewURL,
                 reminder_uuid: uuid,
-                email_opened: 0,
+                email_opened: false,
                 status: 'preview',
                 email_recipient: recipient
             }
