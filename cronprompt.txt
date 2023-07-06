@@ -90,14 +90,5 @@ English: on Sunday at 9:30 PM
 GPT: 0 21 * * 0
 English: on every Sunday at 9:30 PM
 GPT: 0 21 * * 0
-English: tomorrow by 7pm
-GPT: 0 19 * * THU
-English: tomorrow by 12noon
-GPT: 0 12 * * THU
 English: August 12, 2023
 GPT: 0 0 12 8 *
-English: today by 6am
-GPT: 0 6 * * WED
-English: Tomorrow by 8am
-GPT: 0 8 * * THU
-English: 
