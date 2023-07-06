@@ -27,9 +27,6 @@ exports.generateReminder = async (req, res) => {
         await reminderService.createReminder(uuid, userUUID, email, cron, recipients, title, body, schedulePrompt, actionPrompt, previewURL, 'preview');
 
 
-        // create cron job
-        await cronService.setupCronJob(cron);
-
         return res.status(201).json({
             status: true,
             message: 'Email reminder generated, please activate/start reminder for it to start running',
@@ -47,9 +44,6 @@ exports.generateReminder = async (req, res) => {
             }
         });
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-
         return res.status(500).json({
             status: false,
             message: 'Reminder GPT may be handling a lot of requests at the moment, please try again later'
@@ -125,7 +119,14 @@ exports.startReminder = async (req, res) => {
         }
 
 
+        // update reminder status
         await reminderService.updateReminderStatus(uuid, 'running');
+
+
+        // create cron job for email delivery
+        const {cron, email_title : emailTitle, email_body: emailBody } = reminder.rows[0];
+        await cronService.setupCronJob(cron, 'silverg33k@gmail.com', emailTitle, emailBody);
+
 
         return res.status(200).json({
             status: true,

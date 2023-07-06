@@ -47,10 +47,10 @@ require('./routes')(app, version);
 
 // default route
 app.get('/', (req, res) => {
-  res.status(200).json({
-    status: true,
-    message: 'Hello world'
-  });
+  res.render('index', (error, html) => {
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send(html);
+});
 });
 
 // block other routes

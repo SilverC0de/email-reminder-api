@@ -1,4 +1,4 @@
-# 📡 Email reminder API
+# Email reminder API
 Email reminder API allows you to send emails to yourself or others as a reminder using prompts. The prompts are in basic English that can be typed e.g. Remind Emeka to clear the imported goods by 7 am tomorrow.
 
 #

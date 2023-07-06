@@ -28,12 +28,12 @@ api.route('/info/:uuid').get([
 ], validatorMiddleware, jwtMiddleware, reminderController.fetchReminder);
 
 
-api.route('/start').post([
+api.route('/start').patch([
   check('reminder_uuid').matches(/[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}/).withMessage('Reminder UUID is required').trim()
 ], validatorMiddleware, jwtMiddleware, reminderController.startReminder);
 
 
-api.route('/stop').post([
+api.route('/stop').patch([
   check('reminder_uuid').matches(/[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}/).withMessage('Reminder UUID is required').trim()
 ], validatorMiddleware, jwtMiddleware, reminderController.stopReminder);
 
