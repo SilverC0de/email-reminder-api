@@ -8,7 +8,7 @@ const { useTreblle } = require('treblle');
 const { PORT, TREBLLE_API_KEY, TREBLLE_PROJECT_ID } = require('./config');
 
 const app = express();
-const version = 'v1';
+const version = 'api/v1';
 
 const limiter = rateLimit({
 	windowMs: 10 * 60 * 1000,
@@ -26,12 +26,12 @@ app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 app.use(helmet({
     'crossOriginEmbedderPolicy': true,
-    'X-Frame-Options': 'DENY',
-    'xPoweredBy': false
+    'xPoweredBy': false,
+    'xFrameOptions': { action: 'deny' }
 }));
 
+
 app.use((req, res, next) => {
-  res.setHeader('Accept', 'application/json');
   res.setHeader('Allow', 'application/json');
   res.setHeader('Content-Type', 'application/json');
   next();
