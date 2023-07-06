@@ -3,9 +3,10 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const path = require('path');
 const cors = require('cors');
+const session = require('express-session');
 const { useTreblle } = require('treblle');
 const { limiter } = require('./middlewares/ratelimit.middleware');
-const { PORT, TREBLLE_API_KEY, TREBLLE_PROJECT_ID } = require('./config');
+const { PORT, KEY, TREBLLE_API_KEY, TREBLLE_PROJECT_ID } = require('./config');
 
 const app = express();
 const version = 'api/v1';
@@ -14,6 +15,14 @@ const version = 'api/v1';
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '1mb' }));
+app.use(session({
+  secret: KEY,
+  resave: true,
+  saveUninitialized: true,
+  cookie: { 
+    maxAge: 60 * 60 * 1000 // session for failed login attempt counts expires in 1 hour
+   }
+}));
 app.use(cors());
 app.use(helmet({
     'crossOriginEmbedderPolicy': true,

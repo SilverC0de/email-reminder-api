@@ -53,17 +53,31 @@ exports.registerUser = async (req, res) => {
 
 exports.signInUser = async (req, res) => {
     const {email, password } = req.body;
+    const maxAllowedLoginAttempts = 5;
        
     try {
         // check user
         const fetchedUser = await userService.fetchUser(email);
+        const loginAttempts = (req.session['loginAttempts']) ? parseInt(req.session['loginAttempts'], 10) : 0; // number of wrong login attempts
+
+
+        // check login attempts
+        if(loginAttempts > maxAllowedLoginAttempts) {
+            return res.status(403).json({
+                status: false,
+                message: 'Too many login attempts, try again later'
+            });
+        }
 
 
         if(fetchedUser.rowCount === 0) {
+            // reduce allowed attempts
+            req.session['loginAttempts'] = loginAttempts + 1; // add to number of failed attempts
+
             // showing little infomation for security reasons
             return res.status(401).json({
                 status: false,
-                message: 'Incorrect email/password combination'
+                message: `Incorrect email/password combination, you have ${maxAllowedLoginAttempts - loginAttempts} more ${((maxAllowedLoginAttempts - loginAttempts) === 1) ? 'retry' : 'retries'} left`
             });
         }
 
@@ -75,9 +89,12 @@ exports.signInUser = async (req, res) => {
         // check password
         const passwordMatch = await bcryptService.comperePassword(password, hashedPassword);
         if(!passwordMatch) {
+            req.session.loginAttempts = loginAttempts + 1; // add to number of failed attempts
+
+            // showing little infomation for security reasons
             return res.status(401).json({
                 status: false,
-                message: 'Incorrect email/password combination'
+                message: `Incorrect email/password combination, you have ${maxAllowedLoginAttempts - loginAttempts} more ${((maxAllowedLoginAttempts - loginAttempts) === 1) ? 'retry' : 'retries'} left`
             });
         }
 

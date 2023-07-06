@@ -43,5 +43,5 @@ This repository can be installed on your local machine. Please make sure you hav
 3. ``cd email-reminder-api``
 4. ``npm i``
 5. Rename .env.development to just .env
-6. ``npm start``
-7. API Documentation can be found on Treblle
+6. Remove all `dev-` from the secret keys inside .env
+7. ``npm start``
