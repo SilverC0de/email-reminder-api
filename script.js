@@ -51,7 +51,7 @@ app.get('/', (req, res) => {
 
 // block other routes
 app.all('*', (req, res) => {
-  res.status(200).json({
+  res.status(405).json({
     status: false,
     message: 'API route not allowed or supported'
   });
