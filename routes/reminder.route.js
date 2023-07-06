@@ -38,6 +38,16 @@ api.route('/stop').post([
 ], validatorMiddleware, jwtMiddleware, reminderController.stopReminder);
 
 
+api.route('/list').get([
+  [
+    check('page')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .withMessage('Enter a valid page number')
+  ]
+], validatorMiddleware, jwtMiddleware, reminderController.listReminders);
+
+
 api.route('/interface/:uuid').get([
   check('uuid').matches(/[0-9a-zA-Z]{8}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{4}-[0-9a-zA-Z]{12}/).withMessage('Reminder UUID is required').trim()
 ], validatorMiddleware, reminderController.previewReminderHTML);

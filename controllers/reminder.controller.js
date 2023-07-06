@@ -1,4 +1,5 @@
 const { v4 : uuidv4 } = require('uuid');
+const { format } = require('date-fns');
 const openAIService = require('../services/openai.service');
 const reminderService = require('../services/reminder.service');
 const cronService = require('../services/cron.service');
@@ -77,6 +78,7 @@ exports.fetchReminder = async (req, res) => {
             schedule,
             preview,
             status,
+            created_at: time,
             open_count: counter,
             email_title: title,
             email_info: body,
@@ -96,6 +98,7 @@ exports.fetchReminder = async (req, res) => {
                 reminder_uuid: uuid,
                 status,
                 open_count: counter,
+                time: format(time, 'MMMM d yyyy - h:mma'),
                 recipients: recipients.email
             }
         });
@@ -162,6 +165,60 @@ exports.stopReminder = async (req, res) => {
         return res.status(500).json({
             status: false,
             message: 'Unable to fetch email reminder'
+        });
+    }
+};
+
+
+exports.listReminders = async (req, res) => {
+    const { uuid: userUUID } = req;
+    const { page } = req.query;
+    const limit = 5;
+    const offset = parseInt(page - 1, 10) * limit; // point where to start getting data from...
+
+    try {
+        // calculate page numbering
+        // count number of reminders
+        const reminderCountData = await reminderService.countReminderByUser(userUUID);
+        const reminderCount = reminderCountData.rows[0].count;
+        const lastPage = Math.ceil(parseInt(reminderCount, 10) / limit);
+
+
+        if (page > lastPage) {
+            return res.status(416).json({
+              status: false,
+              message: `Page number cannot exceed ${lastPage}`,
+            });
+        }
+
+
+        // get reminder data
+        const reminderList = await reminderService.fetchReminderListByUser(userUUID, limit, offset);
+
+        const reminderListFormatted = reminderList.rows.map((reminders) => ({
+            reminder_uuid: reminders.uuid,
+            email_title: reminders.email_title,
+            schedule_prompt: reminders.schedule,
+            preview: reminders.preview,
+            status: reminders.status,
+            time: format(reminders.created_at, 'MMMM d yyyy - h:mma')
+        }));
+        
+        return res.status(200).json({
+            status: true,
+            message: 'Here are your list of reminders',
+            data: {
+                this_page: page,
+                prev_page: page > 1 ? parseInt(page, 10) - 1 : null,
+                next_page: page < lastPage ? parseInt(page, 10) + 1 : null,          
+                last_page: lastPage,
+                list: reminderListFormatted
+            }
+        }); 
+    } catch (e) {
+        return res.status(500).json({
+            status: false,
+            message: 'Unable to fetch reminder list'
         });
     }
 };
